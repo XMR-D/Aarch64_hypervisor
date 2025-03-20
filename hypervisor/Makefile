@@ -1,3 +1,4 @@
-DIR2 := hypervisor/
+HYPE_DIR := hypervisor
+INCLUDES += -I$(HYPE_DIR)/include
 
-srcs-y += $(DIR2)/entry.S
+srcs-y += $(HYPE_DIR)/entry.S $(HYPE_DIR)/hmain.c $(HYPE_DIR)/serial.c

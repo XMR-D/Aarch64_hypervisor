@@ -1,3 +1,4 @@
-DIR3 := plat/$(PLAT)
+PLAT_DIR := plat/$(PLAT)
+INCLUDES += -I$(PLAT_DIR)/include
 
-srcs-y += $(DIR3)/toto2.c
+srcs-y += $(PLAT_DIR)/uart.c

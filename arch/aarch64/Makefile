@@ -1,2 +1,4 @@
-DIR1 := arch/$(ARCH)
-srcs-y += $(DIR1)/toto.c
+ARCH_DIR := arch/$(ARCH)
+INCLUDES += -I$(ARCH_DIR)/include
+
+srcs-y += 

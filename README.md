@@ -1,10 +1,10 @@
 # Aarch64_hypervisor
 
-##BUILD
+## BUILD
 
 make build
 
-##RUN
+## RUN
 
 make run
 

@@ -16,19 +16,15 @@ objs-y:=$(patsubst %.S,%.S.o,$(objs-y))
 .PHONY: all
 all: build
 
-screen: build glaunch
-
-run: build launch
-
 build: pflash.bin
 
-launch:
-	qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -initrd thirdparty/initramfs.cpio.gz -serial mon:stdio -m 2G -smp 4
-glaunch:
-	qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -initrd thirdparty/initramfs.cpio.gz -serial pty -m 2G -smp 4
+run: build
+	qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -serial mon:stdio -m 2G -smp 4
+screen:
+	qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -serial pty -m 2G -smp 4
 
 %.c.o: %.c
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
 %.S.o: %.S
 	$(AS) $(SFLAGS) $^ -o $@
