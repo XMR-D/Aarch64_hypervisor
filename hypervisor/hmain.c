@@ -1,8 +1,11 @@
 #include <stdint.h>
+
 #include "serial.h"
+#include "picolibc.h"
+
 
 int hmain()
 {
-    puts("Hello World!\n");
+    puts("Hello Hypervisor!\n");
     return 0;
 }
