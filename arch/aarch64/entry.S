@@ -8,6 +8,7 @@ _start:
     mov x6, x0
     bl init_neon
     mov x0, x6
+    bl bootstrap
     bl hmain
     ret
 

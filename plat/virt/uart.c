@@ -27,8 +27,7 @@ uint8_t getc(void)
 {
     wait_unbusy();
     while (uartfr->fr_rxfe == 1)
-    {
         continue;
-    }
+    
     return uartdr->dr_data;
 }
