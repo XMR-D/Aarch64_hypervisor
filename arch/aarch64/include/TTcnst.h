@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 extern volatile STACK_END;
-extern volatile STACK_END;
+extern volatile PHYS_MEM_SIZE;
 
 /*From ARM developper guide on virtual memory management and OSdev*/
 
@@ -29,9 +29,23 @@ extern volatile STACK_END;
 
 #define TTBR_CNP    1
 
-uint64_t L1entry = PT_PAGE | PT_AF | PT_AF | PT_USER | PT_ISH | PT_MEM;
-uint64_t L2entry = PT_PAGE | PT_AF | PT_AF | PT_USER | PT_ISH | PT_MEM;
-uint64_t L3entry = PT_PAGE | PT_AF | PT_AF | PT_USER | PT_ISH | PT_MEM;
+#define L2entry  PT_PAGE | PT_AF | PT_KERNEL | PT_ISH | PT_MEM
+#define L3entry  PT_BLOCK | PT_AF | PT_KERNEL | PT_ISH | PT_MEM | PT_RW | PT_RO
 
+//L2 block size = 2MB | L3 block size = 4KB
+#define L2_BLOCK_SIZE 0x200000
+#define L3_BLOCK_SIZE PAGESIZE
+
+//Define the number of entries in L2 table and L3 tables
+#define L2_NB_ENTRY (PHYS_MEM_SIZE/L2_BLOCK_SIZE)
+#define L3_NB_ENTRY (L2_BLOCK_SIZE/L3_BLOCK_SIZE)
+
+//Table that will go in ttbr0_EL2
+uint64_t L2_0[L2_NB_ENTRY];
+
+//Table that will go in ttbr1_EL2
+uint64_t L2_1[L2_NB_ENTRY];
+
+#define START_ADDR 0x0
 
 #endif

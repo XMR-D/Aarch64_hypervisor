@@ -9,6 +9,9 @@ RAM_START = 0x40000000;
 TEXT_START = 0x40080000;
 /*Upon pagination activation swap TEXT_START address to higherhalf (upon 0xffffffffffff)*/
 
+/* Used to define pagination constant */
+PHYS_MEM_SIZE = 0x80000000;
+
 SECTIONS
 {
     . = FLASH_START;

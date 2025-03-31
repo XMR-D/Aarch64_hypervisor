@@ -26,15 +26,17 @@ screen:
 %.c.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
+#run preprocess + compile all asm files
 %.S.o: %.S
-	$(AS) $(SFLAGS) $^ -o $@
+	$(CC) $(INCLUDES) -E $^ -o $@
+	$(AS) $(INCLUDES) $(SFLAGS) $^ -o $@
 
 %.ld: %.lds
-	$(AS) $^ -o $@
+	$(V)$(AS) $^ -o $@
 
 .PRECIOUS: %.elf
 hypervisor.elf: $(objs-y)
-	$(LD) $(LDFLAGS) $^ -o $@
+	$(LD) $(LDFLAGS) $(INCLUDES) $^ -o $@
 
 .PRECIOUS: %.dump
 %.dump: %.elf
