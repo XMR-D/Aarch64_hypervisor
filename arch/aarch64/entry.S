@@ -5,9 +5,12 @@
 _start:
     ldr x30, =STACK_TOP
     mov sp, x30
+
+    //Init neon (SIMD Aarch64 ISA extension (much fast !))
     mov x6, x0
     bl init_neon
     mov x0, x6
+    //Call bootstraping
     bl bootstrap
     bl hmain
     ret

@@ -6,7 +6,7 @@
 
 int hmain()
 {
-    puts("Hello Hypervisor!\n");
+    puts("Hello Hypervisor (with virtual memory)!\n");
     while(1) {
         char c = getc();
         putc(c);

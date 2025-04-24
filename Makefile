@@ -9,10 +9,6 @@ $(srcs-y):=
 objs-y:=$(patsubst %.c,%.c.o,$(srcs-y))
 objs-y:=$(patsubst %.S,%.S.o,$(objs-y))
 
-
-#$(info sources files needed : $(srcs-y))
-#$(info object files needed : $(objs-y))
-
 .PHONY: all
 all: build
 
@@ -20,23 +16,28 @@ build: pflash.bin
 
 run: build
 	qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -serial mon:stdio -m 2G -smp 4
-screen:
+
+screen: build
 	qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -serial pty -m 2G -smp 4
+
+debug: build
+	qemu-system-$(ARCH) -machine $(PLAT),dumpdtb=Hypervisor.dtb -cpu cortex-a72 -nographic -kernel pflash.bin -singlestep -d in_asm -D DebugTrace.txt -serial mon:stdio -m 2G -smp 4
+	$(ARCH)-linux-gnu-objdump -D -h hypervisor.elf > HypervisorDump.txt
+
 
 %.c.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
-#run preprocess + compile all asm files
+
 %.S.o: %.S
-	$(CC) $(INCLUDES) -E $^ -o $@
 	$(AS) $(INCLUDES) $(SFLAGS) $^ -o $@
 
 %.ld: %.lds
-	$(V)$(AS) $^ -o $@
+	$(AS) $^ -o $@
 
 .PRECIOUS: %.elf
 hypervisor.elf: $(objs-y)
-	$(LD) $(LDFLAGS) $(INCLUDES) $^ -o $@
+	$(LD) $(LDFLAGS) $^ -o $@
 
 .PRECIOUS: %.dump
 %.dump: %.elf
@@ -53,4 +54,4 @@ pflash.bin: hypervisor.img
 #$(V)dd if=$(KERNEL) of=$@ conv=notrunc bs=1M seek=50 (used to copy kernel images into the final binary)
 
 clean:
-	rm -rf *.img *.elf *.bin *.dump *.o $(MAIN)/*.o plat/$(PLAT)/*.o arch/$(ARCH)/*.o
+	rm -rf *.img *.elf *.bin *.dump *.o $(MAIN)/*.o plat/$(PLAT)/*.o arch/$(ARCH)/*.o HypervisorDump.txt DebugTrace.txt Hypervisor.dtb

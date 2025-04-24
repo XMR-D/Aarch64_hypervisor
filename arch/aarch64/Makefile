@@ -1,4 +1,6 @@
 ARCH_DIR := arch/$(ARCH)
 INCLUDES += -I$(ARCH_DIR)/include
 
-srcs-y += $(ARCH_DIR)/bootstrap.S $(ARCH_DIR)/entry.S
+#ORDER IS IMPORTANT ENTRY.S AT THE START
+
+srcs-y += $(ARCH_DIR)/entry.S $(ARCH_DIR)/pagination.c $(ARCH_DIR)/bootstrap.S 

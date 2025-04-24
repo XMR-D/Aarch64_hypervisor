@@ -7,10 +7,7 @@ OUTPUT(hypervisor.bin)
 FLASH_START = 0x000100000;
 RAM_START = 0x40000000;
 TEXT_START = 0x40080000;
-/*Upon pagination activation swap TEXT_START address to higherhalf (upon 0xffffffffffff)*/
-
-/* Used to define pagination constant */
-PHYS_MEM_SIZE = 0x80000000;
+/*Upon pagination activation swap TEXT_START address to higherhalf (at 0xffffffff)*/
 
 SECTIONS
 {
@@ -40,7 +37,7 @@ SECTIONS
     TTBR1_END = .;
     . = ALIGN(8);
 
-    /* Setup stack at 0x7fff0000, this will be important at the begining but later on each process will have their own stack */
+    /* Setup stack at 0x7fff0000, this will be important at the begining but later on each process will have their own stack, this represent the hypervisor stack*/
     . = 0x7fff0000;
     STACK_TOP = .;
     . += 8M;
@@ -53,7 +50,7 @@ Ou est ce que je suis chargé ? (le binaire) (Lire la datasheet de la board)
   => Soit je suis le premier bout de code.
 
 TTBRs not mandatory but usefull to get quick pagination and Classic C memory model.
-=> allows us to do quick pagination and higherhalf remap before jumping into logic
+=> allows us to do quick pagination and higherhalf remap before jumping into logic => this is much needeed
 
 TODO: Need to adapt this linker script to be adaptable to specific arch and plat choice
 */
