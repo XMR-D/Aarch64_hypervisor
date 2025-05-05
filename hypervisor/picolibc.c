@@ -55,7 +55,6 @@ int64_t strcmp(const uint8_t *a, const uint8_t *b)
 
     if(sub != 0)
         return sub;
-
     for(size_t i = 0; i < la; i++) {
         uint64_t subc = a[i] - b[i];
         if (subc != 0)

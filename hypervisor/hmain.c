@@ -2,14 +2,16 @@
 
 #include "uart.h"
 #include "serial.h"
+#include "log.h"
 #include "picolibc.h"
+#include "CLI.h"
 
 int hmain()
 {
-    puts("Hello Hypervisor (with virtual memory)!\n");
+    INFO("Starting Hypervisor logic");
+
     while(1) {
-        char c = getc();
-        putc(c);
+        CLI();
     }
     return 0;
 }
