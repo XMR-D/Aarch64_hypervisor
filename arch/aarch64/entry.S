@@ -10,8 +10,9 @@ _start:
     mov x6, x0
     bl init_neon
     mov x0, x6
-    //Call bootstraping
-    bl bootstrap
+    //Call bootstraping && debug bootstraping (for some resaon)
+    
+    //bl bootstrap
     bl hmain
     ret
 

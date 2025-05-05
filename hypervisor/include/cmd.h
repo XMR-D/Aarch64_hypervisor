@@ -8,7 +8,7 @@ void Memdump(void);
 
 void Memtest(void);
 
-void Memcheck(void);
+void Hostcheck(void);
 
 void Hostinfo(void);
 

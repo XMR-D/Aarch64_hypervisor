@@ -2,7 +2,7 @@
 
 #include "uart.h"
 #include "serial.h"
-
+#include "picolibc.h"
 #include "CLI.h"
 #include "cmd.h"
 
@@ -27,7 +27,9 @@ void Reset(void)
 uint64_t CmdResolve()
 {
     //PARSE COMMAND
-    return 0;
+    if (strcmp(cmd, (const uint8_t *) "help") == 0)
+        return HELP;
+    return UNKNOWN;
 }
 
 void CmdHandler(uint64_t CRI)
@@ -43,7 +45,7 @@ void CmdHandler(uint64_t CRI)
             Memtest();
             break;
         case HOSTCHECK:
-            Memcheck();
+            Hostcheck();
             break;
         case HOSTINFO:
             Hostinfo();
@@ -57,7 +59,7 @@ void CmdHandler(uint64_t CRI)
         default:
             puts("Command '");
             puts((volatile char *) cmd);
-            puts("' ");
+            puts("'");
             Unknown();
             break;
     }
@@ -67,29 +69,25 @@ void CLI(void)
 {
     uint8_t input = 0;
     puts("EL2 > ");
-    while(input != ENTER)
+    while(input != ENTER_K)
     {
         input = getc();
         //If printable print it
-        if (is_printable(input)) {
+        if (is_printable(input) || input == SPACE_K) {
             cmd[curs] = input;
             curs++;
             putc(input);
         }
         //Else do different things depending on input 
         else switch(input) {
-            case DEL:
+            case DEL_K:
                 if (curs > 0) {
-                    cmd[curs] = 0;
                     curs--;
+                    cmd[curs] = 0;
                     puts("\b \b");
                 }
                 break;
-            case SPACE:
-                cmd[curs] = ' ';
-                curs++;
-                break;
-            case ENTER:
+            case ENTER_K:
                 putc('\n');
                 break;
             default:
