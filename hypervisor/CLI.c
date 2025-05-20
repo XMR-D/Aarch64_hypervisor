@@ -21,9 +21,7 @@ uint8_t curr = 0;
 CLI_args cmd_args;
 
 
-//TODO : FIX HELP/5 situation
-//TODO : DEBUG FROM_HEX handling hexvalues
-
+//TODO : FIX WHY ENABLING MMU MAKE EVERYTHING EXPLODE = MAYBE LINKED TO WHERE THE CODE IS BEFORE ACTIVATING PAGINATION
 void Dump_args(void)
 {
     WARN("Dumping command arguments after parsing");
@@ -97,9 +95,9 @@ void fill_args(uint64_t val, uint8_t index)
     }
 }
 
-//CmdTokenize: Tokenize cmd and fill the args structure
-//PARSE_SUCC: cmd tokenized successfully
-//PARSE_ERR: cmd tokenization failed (Wrong argument format)
+//CmdParse: Tokenize input, parse and fill the args structure
+//SUCC: input tokenized successfully
+//ERR: input tokenization failed
 uint64_t CmdParse(uint8_t * start)
 {
     uint8_t j = 0;
@@ -112,18 +110,25 @@ uint64_t CmdParse(uint8_t * start)
 
     while(input_len > 0)
     {
+        //TOKENIZE
         tok = curs;
 
         //No token left
         if (*tok == '\0')
             break;
-
-        //TOKENIZE
-       for (j = 0; curs[j] != ' '; j++)
-       {
+        
+        //Skip spaces between tokens
+        for (int k = 0; curs[k] == ' '; j++) {
+            tok++;
+            curs++;
+        }
+        
+        for (j = 0; curs[j] != ' '; j++)
+        {
             if(curs[j] == 0)
                 break;
-       }
+        }
+
         //remove the ' ' or do nothing if at the end of the str
         curs[j] = 0;
 
@@ -142,13 +147,12 @@ uint64_t CmdParse(uint8_t * start)
             Reset();
             return ERR;
         }
-
         //if value is negative an error has been encountered
         if (value < 0) {
             Reset();
             return ERR;
         }
-
+        //if argindex is higher than 8 too much argument
         if (argindex > 8) {
             puts("!> Error while handling argument structure. Too much argument (hint: Max argument number : 8)\n");
             Reset();

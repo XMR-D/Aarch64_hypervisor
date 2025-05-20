@@ -97,7 +97,9 @@ uint8_t is_alphabetic(uint8_t c)
 //translate c to lower case
 uint8_t to_lower(uint8_t c)
 {
-    return c + 32;
+    if (c >= 65 && c <= 90)
+        return c + 32;
+    return c;
 }
 
 //Translate a character to it's decimal value, non valid char return negative value
@@ -106,6 +108,8 @@ int8_t char_to_num(uint8_t c)
     //not a digit (abcdef)
     if (c > 57)
     {
+        putint((uint64_t) to_lower(c));
+
         switch(to_lower(c))
         {
             case 'a':
@@ -143,9 +147,12 @@ uint8_t is_hex(uint8_t * str, uint8_t size)
 
     uint8_t i = 2;
 
+    //Skip 0x
+    size -= 2;
+
     for (;i < size; i++)
     {
-        if(!is_hexchar(*curs))
+        if(!is_hexchar(curs[i]))
             return 1;
         i++;
         curs++;
