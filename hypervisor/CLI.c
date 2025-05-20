@@ -20,6 +20,10 @@ uint8_t curr = 0;
 //CLI argument
 CLI_args cmd_args;
 
+
+//TODO : FIX HELP/5 situation
+//TODO : DEBUG FROM_HEX handling hexvalues
+
 void Dump_args(void)
 {
     WARN("Dumping command arguments after parsing");
@@ -155,7 +159,6 @@ uint64_t CmdParse(uint8_t * start)
         //skip to next token
 
         curs += j+1;
-
         input_len -= j+1;
         argindex++;
     }
