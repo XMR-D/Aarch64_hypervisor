@@ -185,11 +185,7 @@ uint8_t is_dec(uint8_t * str, uint8_t size)
 //-1: error found
 int64_t from_str(uint8_t * str, uint8_t size, int64_t base)
 {
-    putint(size);
-    putc('\n');
-    putint(base);
-    putc('\n');
-    uint8_t * curs = str;
+
     uint64_t result = 0;
     uint8_t i = 0;
 
@@ -202,25 +198,27 @@ int64_t from_str(uint8_t * str, uint8_t size, int64_t base)
     }
 
     //Skip potential 0b or 0x
-    if (base == 16 || base == 2)
+    if (base == 16 || base == 2) {
         i += 2;
+        size -= 2;
+    }
 
     while (size > 0)
     {
-        num = char_to_num(curs[i]);
+
+        num = char_to_num(str[i]);
 
         //curs[i] is invalid
         if (num < 0 || (num >= base)) {
             puts("!> Argument format error: Invalid character found (hint: too high for given base or purely invalid): '");
-            putc(curs[i]);
+            putc(str[i]);
             puts("'.\n");
             return -1;
         }
 
-        result += num*pow(base, size);
+        result += num*pow(base, size-1);
         size--;
         i++;
-        curs++;
     }
 
     return result;

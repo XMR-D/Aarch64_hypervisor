@@ -90,8 +90,6 @@ void fill_args(uint64_t val, uint8_t index)
         case 8:
             cmd_args.arg8 = val;
             break;
-        default:
-            puts("!> Error while handling argument structure. Requesting out of range argument (hint: Max argument: 8)\n");
     }
 }
 
@@ -100,7 +98,6 @@ void fill_args(uint64_t val, uint8_t index)
 //PARSE_ERR: cmd tokenization failed (Wrong argument format)
 uint64_t CmdParse(uint8_t * start)
 {
-    uint8_t i = 0;
     uint8_t j = 0;
 
     //arggindex indicate which field of the struct to fill
@@ -109,30 +106,22 @@ uint64_t CmdParse(uint8_t * start)
     uint8_t * curs = start;
     uint8_t * tok = curs;
 
-    while(i < input_len)
+    while(input_len > 0)
     {
         tok = curs;
 
+        //No token left
+        if (*tok == '\0')
+            break;
+
         //TOKENIZE
-        j = 0;
-        while (1) {
-            curs++;
-            j++;
-
-            //Check this 
-            if(*curs == '\0' || *curs == ' ')
+       for (j = 0; curs[j] != ' '; j++)
+       {
+            if(curs[j] == 0)
                 break;
-        }
-
-        //remove the ' ' or do nothing if at teh end of the str
-        *curs = 0;
-
-        puts("current token : ");
-        puts((volatile char *) tok);
-        putc('\n');
-        puts("token size : ");
-        putint(j);
-        putc('\n');
+       }
+        //remove the ' ' or do nothing if at the end of the str
+        curs[j] = 0;
 
         //PARSE
         //token is an hex number
@@ -156,10 +145,18 @@ uint64_t CmdParse(uint8_t * start)
             return ERR;
         }
 
+        if (argindex > 8) {
+            puts("!> Error while handling argument structure. Too much argument (hint: Max argument number : 8)\n");
+            Reset();
+            return ERR;
+        }
+
         fill_args(value, argindex);
-        //skip space ' '
-        curs += j+2;
-        i += j+2;
+        //skip to next token
+
+        curs += j+1;
+
+        input_len -= j+1;
         argindex++;
     }
 
