@@ -16,8 +16,23 @@
 #define BOOT        6       //Boot : Start booting sequence of the hypervisor
 #define UNKNOWN      999     //Unknown command
 
-
 #define BUFF_LEN    4096
+
+#define SUCC 0
+#define ERR -1
+
+//CLI_ARGS struct : Structure containing our parameters.
+//(See README for detail on arguments format)
+typedef struct cli_args{
+    uint64_t arg1 : 64;
+    uint64_t arg2 : 64;
+    uint64_t arg3 : 64;
+    uint64_t arg4 : 64;
+    uint64_t arg5 : 64;
+    uint64_t arg6 : 64;
+    uint64_t arg7 : 64;
+    uint64_t arg8 : 64;
+}__attribute__((packed)) CLI_args;
 
 void CLI(void);
 

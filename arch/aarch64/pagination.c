@@ -153,10 +153,16 @@ void mmu_init()
 
     //higher half (kernel space)
     asm volatile ("msr ttbr1_el1, %0" : : "r" ((uint64_t)&L2_high));
-
-    //Activate pagination
     
+    INFO("Translation table base registers initialized, enabling MMU via SCTLR_EL1 register");
 
-    SUCC("Paging Init finished successfully.");
+    /*asm volatile (
+        "mrs x9, sctlr_el1\n" //read system control register
+        "orr x9, x9, #1\n"    //flip bit 0 (MMU enable)
+        "msr sctlr_el1, x9\n" //write back value
+        "isb"               //isb (Instruction synchronization barrier) (flush the CPU piepline and refetch instructions with now MMU enabled)
+    );*/
+
+    SUCCESS("Paging Init finished successfully.");
     return;
 }

@@ -9,7 +9,6 @@
 int hmain()
 {
     INFO("Starting Hypervisor logic");
-
     while(1) {
         CLI();
     }

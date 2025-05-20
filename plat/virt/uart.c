@@ -2,6 +2,7 @@
 
 #include "uart.h"
 
+//Hardcoded but should be changed to be extracted from the device tree blob
 volatile struct UART_DR *uartdr = (struct UART_DR *) 0x9000000;
 volatile struct UART_FR *uartfr = (struct UART_FR *) 0x9000018;
 

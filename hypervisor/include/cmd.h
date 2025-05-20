@@ -1,9 +1,10 @@
 #ifndef CMD_H
 
-//TODO : Create Arg struct a structure that will contains our argument for all the following functions
-
 void Help(void);
 
+//Memdump: Dump nb_byte from memory starting at offset s_off in granularity gran (1, 2, 4, 8, 16, 32, 64)
+
+//void Memdump(uint64_t s_off, uint64_t nb_byte, uint8_t gran);
 void Memdump(void);
 
 void Memtest(void);

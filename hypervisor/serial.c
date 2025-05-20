@@ -3,6 +3,8 @@
 #include "uart.h"
 #include "serial.h"
 
+#include "log.h"
+
 //Transmit a string
 void puts(volatile char *str)
 {

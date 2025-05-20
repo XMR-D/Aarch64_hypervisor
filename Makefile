@@ -15,13 +15,14 @@ all: build
 build: pflash.bin
 
 run: build
-	qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -serial mon:stdio -m 2G -smp 4
+	sudo qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -serial mon:stdio -m 2G -smp 4
 
 screen: build
 	qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -kernel pflash.bin -serial pty -m 2G -smp 4
 
 debug: build
 	qemu-system-$(ARCH) -machine $(PLAT),dumpdtb=Hypervisor.dtb -cpu cortex-a72 -nographic -kernel pflash.bin -singlestep -d in_asm -D DebugTrace.txt -serial mon:stdio -m 2G -smp 4
+	sudo qemu-system-$(ARCH) -machine $(PLAT) -cpu cortex-a72 -nographic -serial file:/dev/tty3 -kernel pflash.bin -singlestep -d in_asm -D DebugTrace.txt -serial mon:stdio -m 2G -smp 4
 	$(ARCH)-linux-gnu-objdump -D -h hypervisor.elf > HypervisorDump.txt
 
 

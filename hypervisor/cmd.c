@@ -5,7 +5,7 @@
 
 void Unknown(void)
 {
-    puts(" : Unknown command (see help to know usable commands)\n");
+    puts(" : Unknown command (type 'help' to see usable commands)\n");
     return;
 }
 
@@ -17,11 +17,15 @@ void Help(void)
     return;
 }
 
+/*void Memdump(uint64_t s_off, uint64_t nb_byte, uint8_t gran)
+{
+
+}*/
+
 void Memdump(void)
 {
     puts("To be done.\n");
 }
-
 //Check memory chunks to see if available or not
 void Memtest(void)
 {

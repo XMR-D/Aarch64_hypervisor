@@ -11,4 +11,4 @@ bootstrap:
     //Create paginations tables
     bl mmu_init
     //Here call other methods to init modules if needed before accessing the hmain
-    ret
+    //bl hyp_remap
