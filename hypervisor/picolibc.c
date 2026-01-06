@@ -3,6 +3,7 @@
 #include "uart.h"
 #include "serial.h"
 #include "picolibc.h"
+
 //Memory
 
 //memcpy: copy n bytes from src to dest assuming memory does not overlap
@@ -63,19 +64,6 @@ int64_t strcmp(const uint8_t *a, const uint8_t *b)
     return 0;
 }
 
-//Remtrailling: Remove trailing whitespace
-void rem_trail(uint8_t *a)
-{
-    uint64_t len = strlen(a)-1;
-
-    while(len > 0 && *(a+len) == ' ')
-    {
-        puts("removing a char\n");
-        *(a+len) = 0;
-        len--;
-    }
-}
-
 //Check if a uint8_t is printable
 uint8_t is_printable(uint8_t c)
 {
@@ -108,8 +96,6 @@ int8_t char_to_num(uint8_t c)
     //not a digit (abcdef)
     if (c > 57)
     {
-        putint((uint64_t) to_lower(c));
-
         switch(to_lower(c))
         {
             case 'a':
@@ -125,7 +111,8 @@ int8_t char_to_num(uint8_t c)
             case 'f':
                 return 15;
             default:
-                puts("!> Invalid Character found in operations (hint : it's either out of base (>16) or non alphanumeric)\n");  
+                puts("!> Invalid Character found in operations: ");
+                putc(c);
                 return -1;
         }
     }

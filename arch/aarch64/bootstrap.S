@@ -9,6 +9,11 @@
 //return to _start logic
 bootstrap:
     //Create paginations tables
-    bl mmu_init
+    stp x29, x30, [sp, #-16]!
+    mov x29, sp
+
+    bl hyp_mmu_init
     //Here call other methods to init modules if needed before accessing the hmain
     //bl hyp_remap
+    ldp x29, x30, [sp], #16
+    ret

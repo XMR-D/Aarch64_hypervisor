@@ -7,13 +7,31 @@ OUTPUT(hypervisor.bin)
 FLASH_START = 0x000100000;
 RAM_START = 0x40000000;
 TEXT_START = 0x40080000;
-/*Upon pagination activation swap TEXT_START address to higherhalf (at 0xffffffff)*/
+
+/* Note about systems dev :
+
+Upon pagination activation swap TEXT_START address to higherhalf (at 0xffffffff)
+
+Whos is loading the binary I'm currently doing ? (Read the data sheet or whatever info of the env) 
+    => loaded by a bootfirmware (qqun ma chargé) (Qemu all plat)
+    => the binary is the first to be loaded nothing before.
+
+TTBRs not mandatory but usefull to get quick pagination and Classic C memory model.
+    => allows us to do quick pagination and higherhalf remap before jumping into logic => this is much needeed
+
+*/
+
+bin_start = 0;
+bin_end = 0;
 
 SECTIONS
 {
     . = FLASH_START;
     . = RAM_START;
     . = TEXT_START;
+
+    . = bin_start; /* binary start before text section */
+
     .text : {
         *(.text*)
     }
@@ -23,34 +41,25 @@ SECTIONS
     .data : {
         *(.data*)
     }
+
+    . = bin_end; /* binary end before the bss section, bss is full of zeroes not need to pack it */
+
     .bss : {
         *(.bss COMMON)
     }
-    /* Align next tables to 0x1000 */
-    . = ALIGN(0x1000);
-    TTBR0_START = .;
-    . += 8192*8;
-    TTBR0_END = .;
-    . = ALIGN(0x1000);
-    TTBR1_START = .;
-    . += 8192*8;
-    TTBR1_END = .;
-    . = ALIGN(8);
-
-    /* Setup stack at 0x7fff0000, this will be important at the begining but later on each process will have their own stack, this represent the hypervisor stack*/
+    
+    /* Setup stack at 0x7fff0000, this will be important at the begining but later 
+    on each process will have their own stack, this represent the hypervisor stack */
     . = 0x7fff0000;
     STACK_TOP = .;
     . += 8M;
     STACK_END = .;
+
 }
 
-/*
-Ou est ce que je suis chargé ? (le binaire) (Lire la datasheet de la board)
-  => Soit chargé par un bootfirmware (qqun ma chargé) (Qemu toute plateforme)
-  => Soit je suis le premier bout de code.
+HYP_STACK_TOP = STACK_TOP;
+HYP_STACK_END = STACK_END;
 
-TTBRs not mandatory but usefull to get quick pagination and Classic C memory model.
-=> allows us to do quick pagination and higherhalf remap before jumping into logic => this is much needeed
-
-TODO: Need to adapt this linker script to be adaptable to specific arch and plat choice
-*/
+HYP_START = bin_start;
+HYP_END = bin_end;
+HYP_SIZE = bin_start - bin_end;

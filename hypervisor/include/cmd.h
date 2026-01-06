@@ -1,22 +1,25 @@
 #ifndef CMD_H
+#define CMD_H
 
-void Help(void);
+uint64_t Unknown(void);
 
-//Memdump: Dump nb_byte from memory starting at offset s_off in granularity gran (1, 2, 4, 8, 16, 32, 64)
+uint64_t Help(void);
 
-//void Memdump(uint64_t s_off, uint64_t nb_byte, uint8_t gran);
-void Memdump(void);
+uint64_t Memdump(void);
 
-void Memtest(void);
+//Check memory chunks to see if available or not
+uint64_t Memtest(void);
 
-void Hostcheck(void);
+//Check memory chunks to see if available or not
+uint64_t Hostcheck(void);
 
-void Hostinfo(void);
+//Get info from host kernel iso
+uint64_t Hostinfo(void);
 
-void Guestinfo(void);
+//Get info from Guest kernel iso
+uint64_t Guestinfo(void);
 
-void Boot(void);
+//Start the booting sequence of the host kernel, once started, boot the the guest kernel.
+uint64_t Boot(void);
 
-void Unknown(void);
-
-#endif
+#endif /* !CMD_H */

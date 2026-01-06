@@ -1,4 +1,5 @@
 #ifndef PICOLIBC_H
+#define PICOLIBC_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -29,11 +30,8 @@ uint8_t is_dec(uint8_t * str, uint8_t size);
 //Convert size bytes of a string into a number in given base
 int64_t from_str(uint8_t * str, uint8_t size, int64_t base);
 
-//Remove trailing whitespace
-void rem_trail(uint8_t *a);
-
 //Math
 uint64_t pow(uint64_t a, uint64_t b);
 uint64_t div(int num, int denom);
 
-#endif
+#endif /* !PICOLIBC_H*/

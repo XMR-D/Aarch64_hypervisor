@@ -21,6 +21,6 @@ OBJDUMP=$(CROSS_COMPILER)objdump
 MAIN?=hypervisor
 
 #Languages flags
-CFLAGS= -Wall -Wextra -Werror -ffreestanding -fno-stack-protector -fno-zero-initialized-in-bss -g -c
+CFLAGS= -Wall -Wextra -Werror -Ofast -ffreestanding -fno-stack-protector -fno-zero-initialized-in-bss -g -c
 SFLAGS=
 LDFLAGS=-nostdlib -T link.ld

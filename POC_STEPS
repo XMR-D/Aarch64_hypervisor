@@ -1,0 +1,19 @@
+1- Early identity mapping for hypervisor code
+2- Enable MMU
+3- Remap hypervisor to higher-half addresses
+4- Partition 4GB RAM: 1.5GB each guest, 1GB hypervisor + device mapping
+5- Create stage 2 page tables per guest
+6- Load guest binaries into their memory regions
+7- Define guest context save/restore structures
+8- Implement HVC trap handler
+9- Implement full guest context save/restore
+10- Implement switching logic within hypervisor
+11- Implement blocking HVCs: send/wait and receive/wait
+12- Write minimal guest kernels (20 lines each)
+13- Create guest HVC wrapper assembly stubs
+
+
+14- POC TESTS
+
+Usefull source :
+https://github.com/m8/armvisor/tree/master
