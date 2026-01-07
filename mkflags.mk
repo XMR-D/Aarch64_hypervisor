@@ -1,6 +1,7 @@
 
 #This is where we define the tools and everything that will be used for build stage
 #ARCH: Target architecture chosen by user
+QEMU_PATH?=../qemu/build/qemu-system
 ARCH?=aarch64
 # PLAT: Platerform chosen by user (will be the directory where plateform depedent code will be)
 PLAT?=virt

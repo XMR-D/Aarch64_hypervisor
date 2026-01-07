@@ -54,12 +54,6 @@ SECTIONS
     STACK_TOP = .;
     . += 8M;
     STACK_END = .;
-
 }
 
-HYP_STACK_TOP = STACK_TOP;
-HYP_STACK_END = STACK_END;
-
-HYP_START = bin_start;
-HYP_END = bin_end;
-HYP_SIZE = bin_start - bin_end;
+HYP_END = STACK_END;

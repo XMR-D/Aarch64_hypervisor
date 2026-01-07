@@ -5,19 +5,34 @@
 
 /* define size of the physical memory seen by the hypervisor*/
 #define GB 1073741824UL
-#define PHYS_MEM_SIZE 4*GB
-#define PAGE_SIZE 4096
-#define TOTAL_NB_L1_ENTRY PHYS_MEM_SIZE / PAGE_SIZE
+#define MB 1048576UL
+#define KB 1024UL
+
+#define PHYS_MEM_SIZE (4*GB)
+
+#define L1_GRAN (1 * GB)
+#define L2_GRAN (2 * MB)
+#define L3_GRAN (4 * KB)
+
+#define NB_L1_ENTRY (PHYS_MEM_SIZE / L1_GRAN)
+#define NB_L2_ENTRY (L1_GRAN / L2_GRAN)
+#define NB_L3_ENTRY (L2_GRAN / L3_GRAN)
+
+#define PAGE_SIZE (4*KB)
+
 
 /* define a small padding to guarantee the tables
  (ttbr0 and ttbr1) will be separtated */
 #define GAP_PADDING 8
 
-extern uint64_t HYP_STACK_END;
-
-// Granularity
-#define PT_TABLE    0b11        // 4k granule
-#define PT_BLOCK    0b01
+// entrytype
+/*  
+    bit0 indicate if the entry is valid, 
+    bit1 indicate :
+        if the page is invalid on L3
+        that the entry is a table addr on L1/L2
+*/
+#define PT_VALID_PAGE_TABLE   0b11
 
 // Translation globality
 #define PT_G   0b0          //global translation regime (region available to all processes)
@@ -51,13 +66,13 @@ extern uint64_t HYP_STACK_END;
 #define PT_nSEC     0b1       //The address related to, will NOT be in secure physicall address space 
 
 // defined in MAIR register
-#define PT_MEM      0b00      // normal memory
-#define PT_DEV      0b01      // device MMIO
-#define PT_NC       0b10      // non-cachable
+#define PT_MEM      0b000      // normal memory
+#define PT_DEV      0b001      // device MMIO
+#define PT_NC       0b010      // non-cachable
 
 #define TTBR_CNP    1
 
-typedef struct l1_entry {
+typedef struct page_entry {
     uint64_t entrytype: 2;       //Type of entry (here for block should be 0b11)
     uint64_t AttrIndx: 3;
     uint64_t NS: 1; 
@@ -72,11 +87,11 @@ typedef struct l1_entry {
     uint64_t XN: 1;
     uint64_t SoftwareUsed: 4;
     uint64_t Ignored: 5;
-} __attribute__((packed)) L1_entry;
+} __attribute__((packed)) Page_entry;
 
-/*
+
 //see osdev long descr levl 1/2 (table)
-typedef struct l2entry {
+typedef struct table_entry {
     uint64_t entrytype: 2;       //Type of entry (here for page should be 0b11)
     uint64_t ignored2: 10;      //Ignored bits
     uint64_t baseaddr: 28;      //Base address of a L3 table
@@ -86,21 +101,9 @@ typedef struct l2entry {
     uint64_t XNT: 1;             //XNT XN limit for subsequent lookups
     uint64_t APT: 2;             //APT Access permissions limit for next level lookup
     uint64_t NST: 1;             //NS table, for secure memory accesses, determines type of next level, Otherwise ignored
-} __attribute__((packed)) L2entry;
+} __attribute__((packed)) Table_entry;
 
 
-//see osdev long descr levl 1/2 (table)
-typedef struct l1entry {
-    uint64_t entrytype: 2;       //Type of entry (here for page should be 0b11)
-    uint64_t ignored2: 10;      //Ignored bits
-    uint64_t baseaddr: 28;      //Base address of a L3 table
-    uint64_t zero: 12;          //SBZP = Should be zero or ignored
-    uint64_t ignored: 7;         //Ignored bits
-    uint64_t PXNT: 1;            //PXN limit for subsequent levels
-    uint64_t XNT: 1;             //XNT XN limit for subsequent lookups
-    uint64_t APT: 2;             //APT Access permissions limit for next level lookup
-    uint64_t NST: 1;             //NS table, for secure memory accesses, determines type of next level, Otherwise ignored
-} __attribute__((packed)) L1entry;
-*/
+void hyp_mmu_init(void);
 
 #endif
