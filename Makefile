@@ -16,8 +16,8 @@ screen: build
 	$(QEMU_PATH)-$(ARCH) -machine $(PLAT),secure=on,virtualization=on -cpu cortex-a72 -nographic -kernel pflash.bin -serial pty -m 4G -smp 4
 
 debug: build
-	$(QEMU_PATH)-$(ARCH) -machine $(PLAT),secure=on,virtualization=on,dumpdtb=Hypervisor.dtb -cpu cortex-a72 -nographic -kernel pflash.bin -accel tcg,one-insn-per-tb=on -d in_asm -D DebugTrace.txt -serial mon:stdio -m 2G -smp 4
-	$(QEMU_PATH)-$(ARCH) -machine $(PLAT),secure=on,virtualization=on -cpu cortex-a72 -nographic -kernel pflash.bin -accel tcg,one-insn-per-tb=on -d in_asm,out_asm -D DebugTrace.txt -serial mon:stdio -m 2G -smp 4
+	$(QEMU_PATH)-$(ARCH) -machine $(PLAT),secure=on,virtualization=on,dumpdtb=Hypervisor.dtb -cpu cortex-a72 -nographic -kernel pflash.bin -accel tcg,one-insn-per-tb=on -serial mon:stdio -m 2G -smp 4
+	$(QEMU_PATH)-$(ARCH) -machine $(PLAT),secure=on,virtualization=on -cpu cortex-a72 -nographic -kernel pflash.bin -accel tcg,one-insn-per-tb=on -d int,mmu,in_asm -D DebugTrace.txt -serial mon:stdio -m 2G -smp 4
 
 build: pflash.bin
 

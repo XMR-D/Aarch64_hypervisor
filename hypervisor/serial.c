@@ -39,54 +39,38 @@ void putint(uint64_t nb)
     }
 }
 
-//homemade puthex
-//1 = no zeros
 void puthex(uint64_t nb, uint8_t padding_mode)
 {
-    uint64_t temp = 0;
-    char arr[17] = "0000000000000000\0";
-    uint8_t padded = 1;
-    int8_t i = 0;
+    char hex_digits[] = "0123456789ABCDEF";
+    char buffer[17] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+    int digit_count = 0;
+    int i;
 
+    puts("0x");
 
-    if (nb == 0)
-    {
-        puts(arr);
+    if (nb == 0) {
+        if (padding_mode == 1) {
+            for (i = 0; i < 16; i++) {
+                putc('0');
+            }
+        } else {
+            putc('0');
+        }
         return;
     }
 
-    if (nb <= 15)
-        putc('0');
-
-
-    while(nb > 0)
-    {
-        temp = nb % 16;
-        if(temp < 10)
-        {
-            arr[i] = temp + 48;
-            i += 1;
-        }
-        else
-        {
-            arr[i] = temp + 87;
-            i += 1;
-        }
-        nb /= 16;
+    while (nb > 0) {
+        buffer[digit_count++] = hex_digits[nb & 0xF];
+        nb >>= 4;
     }
 
-    for(i = 15; i >= 0; i--)
-    {
-        if (padding_mode && padded && arr[i] == '0')
-            continue;
-        else if (padding_mode == 1)
-        {
-            putc(arr[i]);
-            padded--;
+    if (padding_mode == 1) {
+        for (i = digit_count; i < 16; i++) {
+            putc('0');
         }
-        else
-        {
-            putc(arr[i]);
-        }
+    }
+
+    while (digit_count > 0) {
+        putc(buffer[--digit_count]);
     }
 }

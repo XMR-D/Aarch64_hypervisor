@@ -39,8 +39,8 @@
 #define PT_nG  0b1          //non-global translation regime (process-specific), relates to current ASID (see Global and process-specific translation table entries Armv7)
 
 // Accessibility
-#define PT_KERNEL   0b00      // privileged, access from EL1 only
-#define PT_USER     0b01      // unprivileged, access from EL0 allowed
+#define PT_KERNEL   0b00      // privileged access only
+#define PT_USER     0b01      // unprivileged access allowed
 
 #define PT_RW       0b0      // read-write
 #define PT_RO       0b1      // read-only
@@ -65,7 +65,7 @@
 #define PT_SEC      0b0       //The address related to, will be in secure physicall address space
 #define PT_nSEC     0b1       //The address related to, will NOT be in secure physicall address space 
 
-// defined in MAIR register
+// inner and outer cacheability, this field represent a MAIR entry index
 #define PT_MEM      0b000      // normal memory
 #define PT_DEV      0b001      // device MMIO
 #define PT_NC       0b010      // non-cachable
