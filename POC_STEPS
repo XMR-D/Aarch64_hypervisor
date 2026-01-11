@@ -1,7 +1,4 @@
-1- Early identity mapping for hypervisor code
-2- Enable MMU
-3- Remap hypervisor to higher-half addresses
-4- Partition 4GB RAM: 1.5GB each guest, 1GB hypervisor + device mapping
+4- Create dtb for VM spawning
 5- Create stage 2 page tables per guest
 6- Load guest binaries into their memory regions
 7- Define guest context save/restore structures

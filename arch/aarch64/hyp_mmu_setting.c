@@ -3,7 +3,6 @@
 #include "uart.h"
 #include "serial.h"
 #include "log.h"
-#include "tar.h"
 
 #include "hyp_mmu_setting.h"
 

@@ -4,8 +4,9 @@
 #include "serial.h"
 #include "log.h"
 
-#include "hyp_mmu_setting.h"
 
+#include "tar.h"
+#include "hyp_mmu_setting.h"
 
 /* 
     This routine will set the early settings for the hypervisor
@@ -55,6 +56,16 @@ void bootstrap_main(void)
     putc('\n');
 
     hyp_mmu_init();
+
+    /* 
+        TODO: CALL tar_extract_file_to with proper args to :
+        1st : debug if tar is correctly detected
+        2nd : check in memory if VM_IMAGE is correctly copied
+    */
+
+    /*
+        3rd and next : implem dtb library to create dtb for VM
+    */
 
     SUCCESS("<BOOTSTRAP> BOOTSTRAPING COMPLETE");
 }

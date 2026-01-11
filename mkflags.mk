@@ -18,10 +18,14 @@ OBJCOPY=$(CROSS_COMPILER)objcopy
 #OBJDUMP: Objdump in order for us to get dump files to analyse
 OBJDUMP=$(CROSS_COMPILER)objdump
 
-# MAIN: hypervisor dir where files not depending on arch or platform will be
-MAIN?=hypervisor
-
 #Languages flags
 CFLAGS= -Wall -Wextra -Werror -Ofast -ffreestanding -fno-stack-protector -fno-zero-initialized-in-bss -g -c
 SFLAGS=
 LDFLAGS=-nostdlib -T link.ld
+
+#Booting mode
+BOOTING_MODE?= $(PLAT),secure=on,virtualization=on 
+DEBUG_BOOTING_MODE?= $(PLAT),secure=on,virtualization=on,dumpdtb=Hypervisor.dtb
+
+#VM path
+VM?= thirdparty/VM.tar
