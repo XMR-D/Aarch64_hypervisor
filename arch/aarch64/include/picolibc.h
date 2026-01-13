@@ -9,8 +9,8 @@ void * memcpy(void *dest, const void *src, size_t n);
 int64_t memcmp(const void *bl1, const void *bl2, size_t n);
 
 //Strings
-int64_t strcmp(const uint8_t *a, const uint8_t *b);
-uint64_t strlen(const uint8_t *a);
+int64_t strcmp(uint8_t *a, uint8_t *b);
+uint64_t strlen(uint8_t *a);
 
 //Check if c is printable
 uint8_t is_printable(uint8_t c);

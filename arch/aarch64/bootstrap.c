@@ -3,10 +3,12 @@
 #include "uart.h"
 #include "serial.h"
 #include "log.h"
-
-
-#include "tar.h"
 #include "hyp_mmu_setting.h"
+#include "generic_aarch64_macros.h"
+#include "tar.h"
+
+/* define the spot where the VM Image will be placed (at 3GB)  */
+#define VM_DEST 0xC0000000
 
 /* 
     This routine will set the early settings for the hypervisor
@@ -55,17 +57,13 @@ void bootstrap_main(void)
     puthex(early_set_hcr_el2(), 1);
     putc('\n');
 
+    /* Init the tables */
     hyp_mmu_init();
 
-    /* 
-        TODO: CALL tar_extract_file_to with proper args to :
-        1st : debug if tar is correctly detected
-        2nd : check in memory if VM_IMAGE is correctly copied
-    */
+    /* extract the vm from the tar image */
+    extract_tarfile_to(BOOTSTRAP_TAR_LOC, VM_DEST, (uint8_t *) "Image");
 
-    /*
-        3rd and next : implem dtb library to create dtb for VM
-    */
+    /* 3rd and next : implem dtb library to create dtb for VM */
 
     SUCCESS("<BOOTSTRAP> BOOTSTRAPING COMPLETE");
 }

@@ -5,14 +5,14 @@
 #include "log.h"
 #include "tar.h"
 #include "picolibc.h"
+#include "generic_aarch64_macros.h"
 
 #include "hyp_mmu_setting.h"
-
 
 static void
 vm_size_compute(uint64_t vm_offset) 
 {
-    
+
 }
 
 static void

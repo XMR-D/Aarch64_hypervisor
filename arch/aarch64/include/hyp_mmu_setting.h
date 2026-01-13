@@ -3,10 +3,7 @@
 
 #include <stdint.h>
 
-/* define size of the physical memory seen by the hypervisor*/
-#define GB 1073741824UL
-#define MB 1048576UL
-#define KB 1024UL
+#include "generic_aarch64_macros.h"
 
 #define PHYS_MEM_SIZE (4*GB)
 

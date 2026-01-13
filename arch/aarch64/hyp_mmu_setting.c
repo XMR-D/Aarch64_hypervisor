@@ -8,6 +8,7 @@
 
 extern uint64_t HYP_END;
 
+
 /* global that represent the current physicall address being mapped */
 uint64_t curr_addr = 0;
 
@@ -43,7 +44,7 @@ static Page_entry init_page_entry(uint64_t addr) {
     entry.SH = PT_ISH;
 
     /* initial mapping consider all page accessible (device mapping will be done afterwards)*/
-    entry.AP = PT_KERNEL;
+    entry.AP = PT_USER;
     /* disable unpriviledge access, R/W for privilege access only*/
     entry.NS = 0b0;
     entry.AttrIndx = PT_MEM;
@@ -86,10 +87,6 @@ static uint64_t hyp_l3_tables_create(void)
     for (uint64_t i = 0; i < NB_L3_ENTRY; i++) {
         
         *curr_entry = init_page_entry(curr_addr);
-
-        //puthex(* (uint64_t*) curr_entry, 1);
-        //putc('\n');
-
         curr_entry++;
         curr_addr += PAGE_SIZE;
     }
@@ -105,10 +102,6 @@ static uint64_t hyp_l3_tables_create(void)
 */
 static uint64_t hyp_l2_table_create(void)
 {
-    /*puts("\n\n~> New L2 table at :");
-    puthex(l2_tables_start, 1);
-    puts("\n\n");*/
-
     //ttbr0 addr is starting right after the stack with a small gap
     uint64_t aligned_addr = align_on_tablesize(l2_tables_start, NB_L2_ENTRY*8);
 
@@ -117,17 +110,8 @@ static uint64_t hyp_l2_table_create(void)
     
     for (uint64_t i = 0; i < NB_L2_ENTRY; i++) {
 
-        /*puts("L2 entry created at : ");
-        puthex((uint64_t) curr_entry, 1);
-        putc('\n');*/
-
         l3_table_off = hyp_l3_tables_create();
         *curr_entry = init_block_entry(l3_table_off);
-
-
-        /*puts("End of L2 table | value : ");
-        puthex(* (uint64_t*) curr_entry, 1);
-        putc('\n');*/
 
         curr_entry++;
     }
@@ -170,17 +154,9 @@ static void hyp_l1_tables_create(void)
     /* for each entry in the L1 table create a l2 table and place it in the entry*/
     for (uint64_t i = 0; i < NB_L1_ENTRY; i++) {
 
-        /*puts("\n\n\n!> New L1 entry at :");
-        puthex((uint64_t) curr_entry, 1);
-        putc('\n');*/
-
         l2_table_off = hyp_l2_table_create();
         *curr_entry = init_block_entry(l2_table_off);
         
-        /*puts("End of L1 table | value:");
-        puthex(* (uint64_t *) curr_entry, 1);
-        puts("\n\n\n");*/
-
         curr_entry++;
     }
 
@@ -195,21 +171,26 @@ void hyp_mmu_init(void)
     
     INFO("<MMU> Stage1 translation tables populated");
 
-    puts("entries in L1: ");
+    puts("Entries in L1: ");
     putint(NB_L1_ENTRY);
     putc('\n');
 
-    puts("entries in L2: ");
+    puts("Entries in L2: ");
     putint(NB_L2_ENTRY);
     putc('\n');
 
-    puts("entries in L3: ");
+    puts("Entries in L3: ");
     putint(NB_L3_ENTRY);
     putc('\n');
 
-    puts("ttbr0_el2 = ");
+    puts("Ttbr0_el2 = ");
     puthex((uint64_t) l1_table_start, 0);
     putc('\n');
+
+    puts("Total Stage1 table size = ");
+    putint(((uint64_t) l3_tables_start) - ((uint64_t) l1_table_start));
+    putc('\n');
+
 
     INFO("<MMU> Setting up TCR_EL2 with following value:");
 

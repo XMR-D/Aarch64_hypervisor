@@ -27,25 +27,25 @@ void ResetInput()
 uint64_t CmdHandler()
 {
     //TODO: Here parse arguments if necessary
-    if (strcmp(input, (const uint8_t *) "help") == 0) {
+    if (strcmp(input, (uint8_t *) "help") == 0) {
         return Help();
     }
-    else if (strcmp(input, (const uint8_t *) "boot") == 0) {
+    else if (strcmp(input, (uint8_t *) "boot") == 0) {
         return Boot();
     }
-    else if (strcmp(input, (const uint8_t *) "memdump") == 0) {
+    else if (strcmp(input, (uint8_t *) "memdump") == 0) {
         return Memdump();
     }
-    else if (strcmp(input, (const uint8_t *) "memtest") == 0) {
+    else if (strcmp(input, (uint8_t *) "memtest") == 0) {
         return Memtest();
     }
-    else if (strcmp(input, (const uint8_t *) "hostcheck") == 0) {
+    else if (strcmp(input, (uint8_t *) "hostcheck") == 0) {
         return Hostcheck();
     }
-    else if (strcmp(input, (const uint8_t *) "hostinfo") == 0) {
+    else if (strcmp(input, (uint8_t *) "hostinfo") == 0) {
         return Hostinfo();
     }
-    else if (strcmp(input, (const uint8_t *) "guestinfo") == 0) {
+    else if (strcmp(input, (uint8_t *) "guestinfo") == 0) {
         return Guestinfo();
     }
     else {

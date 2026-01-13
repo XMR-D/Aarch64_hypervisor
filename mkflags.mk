@@ -27,5 +27,6 @@ LDFLAGS=-nostdlib -T link.ld
 BOOTING_MODE?= $(PLAT),secure=on,virtualization=on 
 DEBUG_BOOTING_MODE?= $(PLAT),secure=on,virtualization=on,dumpdtb=Hypervisor.dtb
 
-#VM path
+#VM path and settings
 VM?= thirdparty/VM.tar
+VM_OFFSET?= 

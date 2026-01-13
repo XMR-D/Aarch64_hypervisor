@@ -13,6 +13,7 @@ void * memcpy(void *dest, const void *src, size_t n)
     uint8_t * sr = (uint8_t *) src;
 
     for (size_t i = 0; i < n; i++) {
+
         *ds = *sr;
         ds++;
         sr++;
@@ -39,7 +40,7 @@ int64_t memcmp(const void *bl1, const void *bl2, size_t n)
 //Strings
 
 //strlen: length of a string
-uint64_t strlen(const uint8_t *a)
+uint64_t strlen(uint8_t *a)
 {
     uint64_t ret = 0;
     while(a[ret] != 0)
@@ -48,7 +49,7 @@ uint64_t strlen(const uint8_t *a)
 }
 
 //strcmp: compare two strings
-int64_t strcmp(const uint8_t *a, const uint8_t *b)
+int64_t strcmp(uint8_t *a, uint8_t *b)
 {
     uint64_t la = strlen(a);
     uint64_t lb = strlen(b);
@@ -56,7 +57,7 @@ int64_t strcmp(const uint8_t *a, const uint8_t *b)
 
     if(sub != 0)
         return sub;
-    
+
     for(size_t i = 0; i < la; i++) {
         uint64_t subc = a[i] - b[i];
         if (subc != 0)
@@ -112,8 +113,6 @@ int8_t char_to_num(uint8_t c)
             case 'f':
                 return 15;
             default:
-                puts("!> Invalid Character found in operations: ");
-                putc(c);
                 return -1;
         }
     }
@@ -200,17 +199,17 @@ int64_t from_str(uint8_t * str, uint8_t size, int64_t base)
 
     while (size > 0)
     {
+        /* end of string reached */
+        if (str[i] == 0) {
+            break;
+        }
 
         num = char_to_num(str[i]);
 
         //curs[i] is invalid
         if (num < 0 || (num >= base)) {
-            puts("!> Argument format error: Invalid character found (hint: too high for given base or purely invalid): '");
-            putc(str[i]);
-            puts("'.\n");
             return -1;
         }
-
         result += num*pow(base, size-1);
         size--;
         i++;
