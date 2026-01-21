@@ -32,6 +32,6 @@ int64_t from_str(uint8_t * str, uint8_t size, int64_t base);
 
 //Math
 uint64_t pow(uint64_t a, uint64_t b);
-uint64_t div(int num, int denom);
+uint64_t align_on_size(uint64_t addr, uint64_t size);
 
 #endif /* !PICOLIBC_H*/

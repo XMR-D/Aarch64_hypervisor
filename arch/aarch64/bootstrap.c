@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "picolibc.h"
 #include "uart.h"
 #include "serial.h"
 #include "log.h"
@@ -7,8 +8,11 @@
 #include "generic_aarch64_macros.h"
 #include "tar.h"
 
-/* define the spot where the VM Image will be placed (at 3GB)  */
-#define VM_DEST 0xC0000000
+
+/* 
+    NOTE: All size and specific VM data locations are computed using macros
+         defined in generic_aarch64_macros.h 
+*/
 
 /* 
     This routine will set the early settings for the hypervisor
@@ -22,7 +26,8 @@
     later on this register will be updated to enable different trapping mechanisms
     
 */
-static uint64_t early_set_hcr_el2(void)
+static 
+uint64_t early_set_hcr_el2(void)
 {
     uint64_t hcr_el2_val = 0;
 
@@ -36,7 +41,33 @@ static uint64_t early_set_hcr_el2(void)
     return hcr_el2_val;
 }
 
-static uint64_t get_current_el(void)
+static
+void setup_vm_bootstrap_data(void)
+{
+    uint64_t unpacked_data_size = 0;
+
+    INFO("<VM BOOTSTRAP> Unpacking data from VM bootstrap tar");
+
+    if (detect_tar_at(BOOTSTRAP_TAR_LOC)) {
+        
+        INFO("<VM BOOTSTRAP> unpacking VM image");
+        unpacked_data_size += extract_tarfile_to(BOOTSTRAP_TAR_LOC, 
+            align_on_size(VM_DEST, 4*KB), 
+            (uint8_t *) "Image");
+        
+        INFO("<VM BOOTSTRAP> unpacking VM dtb");
+        unpacked_data_size += extract_tarfile_to(BOOTSTRAP_TAR_LOC, 
+            align_on_size(VM_DEST + unpacked_data_size, 4*KB),
+            (uint8_t *) "VM.dtb");
+    }
+
+    puts("Total data unpacked from VM bootstrap tar : ");
+    putint(unpacked_data_size);
+    puts(".\n");
+}
+
+static 
+uint64_t get_current_el(void)
 {
     register uint64_t current_el;
     asm volatile ("mrs x0, CurrentEL" : "=r" (current_el));
@@ -44,24 +75,22 @@ static uint64_t get_current_el(void)
 }
 
 /* bootstrap the hypervisor by setting up a proper early environment */
-void bootstrap_main(void) 
+void 
+bootstrap_main(void) 
 {
     INFO("<BOOTSTRAP> HYPERVISOR BOOTSTRAPING");
     puts("Current exception level : ");
-
     putint(get_current_el() >> 2);
     putc('\n');
-
     
-    INFO("Setting up HCR_EL2 with folowing value:");
-    puthex(early_set_hcr_el2(), 1);
-    putc('\n');
+    INFO("Setting up early HCR_EL2");
+    early_set_hcr_el2();
+
 
     /* Init the tables */
     hyp_mmu_init();
 
-    /* extract the vm from the tar image */
-    extract_tarfile_to(BOOTSTRAP_TAR_LOC, VM_DEST, (uint8_t *) "Image");
+    setup_vm_bootstrap_data();
 
     /* 3rd and next : implem dtb library to create dtb for VM */
 

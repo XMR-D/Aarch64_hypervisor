@@ -229,3 +229,10 @@ uint64_t pow(uint64_t a, uint64_t b)
     }
     return count;
 }
+
+// Align to 'size' (must be power of 2)
+uint64_t align_on_size(uint64_t addr, uint64_t size) 
+{
+    uint64_t mask = size - 1;
+    return (addr + mask) & ~mask;
+}

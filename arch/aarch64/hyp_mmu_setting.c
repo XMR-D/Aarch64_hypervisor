@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+#include "picolibc.h"
 #include "uart.h"
 #include "serial.h"
 #include "log.h"
@@ -9,7 +10,7 @@
 extern uint64_t HYP_END;
 
 
-/* global that represent the current physicall address being mapped */
+/* global that represent the current physical address being mapped */
 uint64_t curr_addr = 0;
 
 /* 
@@ -19,13 +20,6 @@ uint64_t curr_addr = 0;
 uint64_t l1_table_start = 0;
 uint64_t l2_tables_start = 0;
 uint64_t l3_tables_start = 0;
-
-
-// Align to 'size' (must be power of 2)
-uint64_t align_on_tablesize(uint64_t addr, uint64_t size) {
-    uint64_t mask = size - 1;
-    return (addr + mask) & ~mask;
-}
 
 static Page_entry init_page_entry(uint64_t addr) {
 
@@ -81,7 +75,7 @@ static Table_entry init_block_entry(uint64_t addr) {
 static uint64_t hyp_l3_tables_create(void)
 {
     //ttbr0 addr is starting right after the stack with a small gap
-    uint64_t aligned_addr = align_on_tablesize(l3_tables_start, NB_L3_ENTRY*8);
+    uint64_t aligned_addr = align_on_size(l3_tables_start, NB_L3_ENTRY*8);
     Page_entry * curr_entry = (Page_entry *) aligned_addr;
     
     for (uint64_t i = 0; i < NB_L3_ENTRY; i++) {
@@ -91,7 +85,7 @@ static uint64_t hyp_l3_tables_create(void)
         curr_addr += PAGE_SIZE;
     }
 
-    l3_tables_start = align_on_tablesize((uint64_t) curr_entry + GAP_PADDING, NB_L3_ENTRY*8);
+    l3_tables_start = align_on_size((uint64_t) curr_entry + GAP_PADDING, NB_L3_ENTRY*8);
 
     return aligned_addr;
 }
@@ -103,7 +97,7 @@ static uint64_t hyp_l3_tables_create(void)
 static uint64_t hyp_l2_table_create(void)
 {
     //ttbr0 addr is starting right after the stack with a small gap
-    uint64_t aligned_addr = align_on_tablesize(l2_tables_start, NB_L2_ENTRY*8);
+    uint64_t aligned_addr = align_on_size(l2_tables_start, NB_L2_ENTRY*8);
 
     uint64_t l3_table_off = 0;
     Table_entry * curr_entry = (Table_entry *) aligned_addr;
@@ -116,7 +110,7 @@ static uint64_t hyp_l2_table_create(void)
         curr_entry++;
     }
     
-    l2_tables_start = align_on_tablesize((uint64_t) curr_entry + GAP_PADDING, NB_L2_ENTRY*8);
+    l2_tables_start = align_on_size((uint64_t) curr_entry + GAP_PADDING, NB_L2_ENTRY*8);
 
     return aligned_addr;
 }
@@ -138,13 +132,13 @@ static void hyp_l1_tables_create(void)
         l1_alignement = 64;
 
     /* Compute the starting point of each sets of tables */
-    l1_table_start = align_on_tablesize(((uint64_t) &HYP_END) + GAP_PADDING, 
+    l1_table_start = align_on_size(((uint64_t) &HYP_END) + GAP_PADDING, 
                                             l1_alignement);
 
-    l2_tables_start = align_on_tablesize(l1_table_start + 
+    l2_tables_start = align_on_size(l1_table_start + 
                 (NB_L1_ENTRY * 8) + GAP_PADDING, NB_L2_ENTRY * 8);
 
-    l3_tables_start = align_on_tablesize(l1_table_start + 
+    l3_tables_start = align_on_size(l1_table_start + 
                 ((NB_L1_ENTRY * 8) + (NB_L1_ENTRY * NB_L2_ENTRY * 8)) + GAP_PADDING, NB_L3_ENTRY*8); 
 
 

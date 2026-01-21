@@ -28,5 +28,5 @@ BOOTING_MODE?= $(PLAT),secure=on,virtualization=on
 DEBUG_BOOTING_MODE?= $(PLAT),secure=on,virtualization=on,dumpdtb=Hypervisor.dtb
 
 #VM path and settings
-VM?= thirdparty/VM.tar
+VM?= thirdparty/Bootstrap.tar
 VM_OFFSET?= 

@@ -32,6 +32,7 @@ typedef struct tarinfos
 } TarInfos;
 
 
-void extract_tarfile_to(uint64_t tar_off, uint64_t dest_off, uint8_t * name);
+uint64_t detect_tar_at(uint64_t off);
+uint64_t extract_tarfile_to(uint64_t tar_off, uint64_t dest_off, uint8_t * name);
 
 #endif
