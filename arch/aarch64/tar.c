@@ -1,9 +1,9 @@
 #include <stdint.h> 
 
 #include "log.h"
-#include "uart.h"
-#include "serial.h"
 #include "picolibc.h"
+#include "serial.h"
+#include "uart.h"
 
 #include "tar.h"
 
@@ -174,12 +174,17 @@ extract_tarfile_to(uint64_t tar_off, uint64_t dest_off, uint8_t * name)
         if (is_header(tar_ptr)) {
 
             Tar_posix_header * tar_file = (Tar_posix_header *) tar_ptr;
+            filesize = from_str((uint8_t *)tar_file->size, strlen((uint8_t*)  tar_file->size), 8);
+
             if (strcmp(name, (uint8_t *) tar_file->name) == 0) {
                 filefound = 1;
                 src_ptr = (uint8_t *) (tar_ptr + BLOCKSIZE);
-                filesize = from_str((uint8_t *)tar_file->size, strlen((uint8_t*)  tar_file->size), 8);
             }
+
+            tar_ptr += filesize + BLOCKSIZE;
+
         }
+
     }
 
     memcpy(dest_ptr, src_ptr, filesize);

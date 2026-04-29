@@ -1,4 +1,3 @@
-4- Create dtb for VM spawning
 5- Create stage 2 page tables per guest
 7- Define guest context save/restore structures
 8- Implement HVC trap handler

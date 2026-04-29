@@ -1,13 +1,14 @@
 #include <stdint.h>
 
-#include "picolibc.h"
-#include "uart.h"
-#include "serial.h"
-#include "log.h"
-#include "hyp_mmu_setting.h"
 #include "generic_aarch64_macros.h"
+#include "mmu.h"
+#include "log.h"
+#include "picolibc.h"
+#include "serial.h"
 #include "tar.h"
+#include "uart.h"
 
+#include "bootstrap.h"
 
 /* 
     NOTE: All size and specific VM data locations are computed using macros
@@ -42,28 +43,29 @@ uint64_t early_set_hcr_el2(void)
 }
 
 static
-void setup_vm_bootstrap_data(void)
+VmInfos setup_vm_bootstrap_data(void)
 {
-    uint64_t unpacked_data_size = 0;
+    VmInfos ret;
 
     INFO("<VM BOOTSTRAP> Unpacking data from VM bootstrap tar");
 
     if (detect_tar_at(BOOTSTRAP_TAR_LOC)) {
         
         INFO("<VM BOOTSTRAP> unpacking VM image");
-        unpacked_data_size += extract_tarfile_to(BOOTSTRAP_TAR_LOC, 
-            align_on_size(VM_DEST, 4*KB), 
+        ret.vm_image_off = align_on_size(VM_DEST, 4*KB);
+        ret.vm_image_size = extract_tarfile_to(BOOTSTRAP_TAR_LOC, 
+            ret.vm_image_off, 
             (uint8_t *) "Image");
-        
+
+
         INFO("<VM BOOTSTRAP> unpacking VM dtb");
-        unpacked_data_size += extract_tarfile_to(BOOTSTRAP_TAR_LOC, 
-            align_on_size(VM_DEST + unpacked_data_size, 4*KB),
+        ret.vm_dtb_off = align_on_size(VM_DEST + ret.vm_image_size, 4*KB);
+        ret.vm_dtb_size = extract_tarfile_to(BOOTSTRAP_TAR_LOC, 
+            ret.vm_dtb_off,
             (uint8_t *) "VM.dtb");
     }
 
-    puts("Total data unpacked from VM bootstrap tar : ");
-    putint(unpacked_data_size);
-    puts(".\n");
+    return ret;
 }
 
 static 
@@ -86,13 +88,8 @@ bootstrap_main(void)
     INFO("Setting up early HCR_EL2");
     early_set_hcr_el2();
 
-
-    /* Init the tables */
-    hyp_mmu_init();
-
-    setup_vm_bootstrap_data();
-
-    /* 3rd and next : implem dtb library to create dtb for VM */
+    VmInfos vm_data = setup_vm_bootstrap_data();
+    mmu_init(&vm_data);
 
     SUCCESS("<BOOTSTRAP> BOOTSTRAPING COMPLETE");
 }

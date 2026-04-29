@@ -12,25 +12,25 @@ uint64_t Unknown(void)
 
 uint64_t Help(void)
 {
-    puts("help\n\n");
+    puts("help\n");
     puts("       Display this help.\n");
     puts("\n\n");
-    puts("memdump [start_addr] [nb_b] [gran]\n\n");
+    puts("memdump [start_addr] [nb_b] [gran]\n");
     puts("       Dump [nb_b] bytes from memory starting from offset [start_addr] following granularity [gran]\n");
     puts("\n\n");
-    puts("memtest [start_addr] [nb_b]\n\n");
+    puts("memtest [start_addr] [nb_b]\n");
     puts("       Test [nb_b] of memory to check if it is writeable starting from [start_addr]\n");
     puts("\n\n");
-    puts("hostcheck\n\n");
+    puts("hostcheck\n");
     puts("       Check for host kernel integrity.\n");
     puts("\n\n");
-    puts("hostinfo\n\n");
+    puts("hostinfo\n");
     puts("       Dump information on host kernel.\n");
     puts("\n\n");
-    puts("guestinfo\n\n");
+    puts("guestinfo\n");
     puts("       Dump information on guest kernel.\n");
     puts("\n\n");
-    puts("boot\n\n");
+    puts("boot\n");
     puts("       Start boot sequence.\n");
     puts("\n\n");
     return 0;

@@ -1,22 +1,11 @@
-#ifndef HYP_MMU_SETTING_H
-#define HYP_MMU_SETTING_H
+#ifndef MMU_H
+#define MMU_H
 
 #include <stdint.h>
 
+#include "bootstrap.h"
+
 #include "generic_aarch64_macros.h"
-
-#define PHYS_MEM_SIZE (4*GB)
-
-#define L1_GRAN (1 * GB)
-#define L2_GRAN (2 * MB)
-#define L3_GRAN (4 * KB)
-
-#define NB_L1_ENTRY (PHYS_MEM_SIZE / L1_GRAN)
-#define NB_L2_ENTRY (L1_GRAN / L2_GRAN)
-#define NB_L3_ENTRY (L2_GRAN / L3_GRAN)
-
-#define PAGE_SIZE (4*KB)
-
 
 /* define a small padding to guarantee the tables
  (ttbr0 and ttbr1) will be separtated */
@@ -100,7 +89,31 @@ typedef struct table_entry {
     uint64_t NST: 1;             //NS table, for secure memory accesses, determines type of next level, Otherwise ignored
 } __attribute__((packed)) Table_entry;
 
+typedef struct table_config {
 
-void hyp_mmu_init(void);
+    uint64_t phys_mem_size;
+    uint64_t l1_gran;
+    uint64_t l2_gran;
+    uint64_t l3_gran;
+
+    uint64_t nb_l1_entry;
+    uint64_t nb_l2_entry;    
+    uint64_t nb_l3_entry;
+
+    uint64_t page_size;
+} Table_config;
+
+typedef struct {
+    uint8_t  attr_indx; // Index dans le MAIR (PT_MEM, PT_DEV...)
+    uint8_t  ap;        // Permissions d'accès (PT_USER, PT_PRIV...)
+    uint8_t  sh;        // Partageabilité (PT_ISH, PT_OSH...)
+    uint8_t  xn;        // Execute-Never (PT_nNX, PT_NX...)
+    uint8_t  pxn;       // Privileged Execute-Never
+    uint8_t  ns;        // Non-Secure bit
+} Mapping_Flags;
+
+
+
+void mmu_init(VmInfos *vm_data);
 
 #endif
