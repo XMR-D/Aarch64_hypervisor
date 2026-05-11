@@ -31,9 +31,7 @@ log_tar_infos(TarInfos tar_infos)
 
 
 
-/*
-    Small method to detect the end of a tar
-*/
+/* Small method to detect the end of a tar */
 static uint8_t
 is_end_of_tar(void * off)
 {
@@ -95,9 +93,7 @@ is_header(void * off)
         return -2;
     }
 
-    /* 
-        return the size of the file to skip
-    */
+    /* return the size of the file to skip */
     return extracted_filesize;
 }
 

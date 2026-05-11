@@ -6,7 +6,8 @@
 #include "log.h"
 
 //Transmit a string
-void puts(volatile char *str)
+void 
+puts(volatile char *str)
 {
     for (uint32_t i = 0; str[i] != '\0'; i++)
     {
@@ -17,7 +18,8 @@ void puts(volatile char *str)
 }
 
 //print a unsigned integer on the serial
-void putint(uint64_t nb)
+void 
+putint(uint64_t nb)
 {
     uint64_t count = 1;
     uint64_t saved = nb;
@@ -39,7 +41,8 @@ void putint(uint64_t nb)
     }
 }
 
-void puthex(uint64_t nb, uint8_t padding_mode)
+void 
+puthex(uint64_t nb, uint8_t padding_mode)
 {
     char hex_digits[] = "0123456789ABCDEF";
     char buffer[17] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";

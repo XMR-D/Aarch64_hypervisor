@@ -3,13 +3,20 @@
 
 #include <stdint.h>
 
-#include "bootstrap.h"
-
 #include "generic_aarch64_macros.h"
 
-/* define a small padding to guarantee the tables
- (ttbr0 and ttbr1) will be separtated */
+/* 
+    define a small padding to guarantee the tables
+    (ttbr0 and ttbr1) will be separtated. 
+*/
 #define GAP_PADDING 8
+
+/* 
+    define the magic for the Translation stage selector used in
+    init_page_entry and init_block_entry 
+*/
+#define STAGE_1 0
+#define STAGE_2 1
 
 // entrytype
 /*  
@@ -58,39 +65,44 @@
 
 #define TTBR_CNP    1
 
-typedef struct page_entry {
-    uint64_t entrytype: 2;       //Type of entry (here for block should be 0b11)
-    uint64_t AttrIndx: 3;
-    uint64_t NS: 1; 
-    uint64_t AP: 2; 
-    uint64_t SH: 2; 
-    uint64_t AF: 1; 
-    uint64_t nG: 1; 
-    uint64_t baseaddr: 28;       //Base adress of a physical block
-    uint64_t Ignored2: 12;       //SBZP: Should be zero or preserved
-    uint64_t ContHint: 1;
-    uint64_t PXN: 1;
-    uint64_t XN: 1;
-    uint64_t SoftwareUsed: 4;
-    uint64_t Ignored: 5;
-} __attribute__((packed)) Page_entry;
 
 
-//see osdev long descr levl 1/2 (table)
-typedef struct table_entry {
-    uint64_t entrytype: 2;       //Type of entry (here for page should be 0b11)
-    uint64_t ignored2: 10;      //Ignored bits
-    uint64_t baseaddr: 28;      //Base address of a L3 table
-    uint64_t zero: 12;          //SBZP = Should be zero or ignored
-    uint64_t ignored: 7;         //Ignored bits
-    uint64_t PXNT: 1;            //PXN limit for subsequent levels
-    uint64_t XNT: 1;             //XNT XN limit for subsequent lookups
-    uint64_t APT: 2;             //APT Access permissions limit for next level lookup
-    uint64_t NST: 1;             //NS table, for secure memory accesses, determines type of next level, Otherwise ignored
-} __attribute__((packed)) Table_entry;
+typedef union {
+    struct {
+        uint64_t type          : 2;   // [1:0]   0b01 pour Block (L1-L2), 0b11 pour Page (L3)
+        uint64_t attr_indx     : 3;   // [4:2]   Index vers registre MAIR_ELx
+        uint64_t ns            : 1;   // [5]     Non-Secure bit
+        uint64_t ap            : 2;   // [7:6]   Access Permissions (EL0/EL1)
+        uint64_t sh            : 2;   // [9:8]   Shareability
+        uint64_t af            : 1;   // [10]    Access Flag
+        uint64_t ng            : 1;   // [11]    not-Global (utilisé pour l'ASID)
+        uint64_t baseaddr      : 36;  // [47:12] Output Address (OA)
+        uint64_t reserved      : 4;   // [51:48] RES0 (sauf si FEAT_LPA2 est actif)
+        uint64_t cont          : 1;   // [52]    Contiguous hint
+        uint64_t pxn           : 1;   // [53]    Privileged Execute-Never
+        uint64_t uxn           : 1;   // [54]    User Execute-Never (XN)
+        uint64_t software      : 4;   // [58:55] Ignored by hardware
+        uint64_t pbha          : 4;   // [62:59] Page-Based Hardware Attributes
+        uint64_t xnx           : 1;   // [63]    Extended Execute-Never
+    } __attribute__((packed));
+    uint64_t raw;
+} Page_entry;
+
+typedef union {
+    struct {
+        uint64_t type          : 2;   // [1:0]   0b11 pour un Table Descriptor
+        uint64_t ignored       : 10;  // [11:2]  Ignored
+        uint64_t baseaddr      : 36;  // [47:12] Adresse physique de la table L(n+1)
+        uint64_t reserved      : 11;  // [58:48] RES0
+        uint64_t pxnt          : 1;   // [59]    Limite PXN pour les niveaux suivants
+        uint64_t xnt           : 1;   // [60]    Limite XN pour les niveaux suivants
+        uint64_t apt           : 2;   // [62:61] Limite Permissions pour les niveaux suivants
+        uint64_t nst           : 1;   // [63]    Sécurité pour les niveaux suivants
+    } __attribute__((packed));
+    uint64_t raw;
+} Table_entry;
 
 typedef struct table_config {
-
     uint64_t phys_mem_size;
     uint64_t l1_gran;
     uint64_t l2_gran;
@@ -101,6 +113,10 @@ typedef struct table_config {
     uint64_t nb_l3_entry;
 
     uint64_t page_size;
+    uint64_t curr_addr;
+
+    uint8_t stage_level;
+
 } Table_config;
 
 typedef struct {
@@ -113,7 +129,6 @@ typedef struct {
 } Mapping_Flags;
 
 
-
-void mmu_init(VmInfos *vm_data);
+void mmu_init();
 
 #endif

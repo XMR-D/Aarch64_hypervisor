@@ -12,7 +12,7 @@
 
 /* 
     NOTE: All size and specific VM data locations are computed using macros
-         defined in generic_aarch64_macros.h 
+    defined in generic_aarch64_macros.h 
 */
 
 /* 
@@ -47,18 +47,18 @@ VmInfos setup_vm_bootstrap_data(void)
 {
     VmInfos ret;
 
-    INFO("<VM BOOTSTRAP> Unpacking data from VM bootstrap tar");
+    INFO("<VmBoot> Unpacking data from VM bootstrap tar");
 
     if (detect_tar_at(BOOTSTRAP_TAR_LOC)) {
         
-        INFO("<VM BOOTSTRAP> unpacking VM image");
+        INFO("<VmBoot> unpacking VM image");
         ret.vm_image_off = align_on_size(VM_DEST, 4*KB);
         ret.vm_image_size = extract_tarfile_to(BOOTSTRAP_TAR_LOC, 
             ret.vm_image_off, 
             (uint8_t *) "Image");
 
 
-        INFO("<VM BOOTSTRAP> unpacking VM dtb");
+        INFO("<VmBoot> unpacking VM dtb");
         ret.vm_dtb_off = align_on_size(VM_DEST + ret.vm_image_size, 4*KB);
         ret.vm_dtb_size = extract_tarfile_to(BOOTSTRAP_TAR_LOC, 
             ret.vm_dtb_off,
@@ -71,7 +71,7 @@ VmInfos setup_vm_bootstrap_data(void)
 static 
 uint64_t get_current_el(void)
 {
-    register uint64_t current_el;
+    uint64_t current_el;
     asm volatile ("mrs x0, CurrentEL" : "=r" (current_el));
     return current_el;
 }
@@ -80,7 +80,7 @@ uint64_t get_current_el(void)
 void 
 bootstrap_main(void) 
 {
-    INFO("<BOOTSTRAP> HYPERVISOR BOOTSTRAPING");
+    INFO("<Bootstrap> Hypervisor bootstraping sequence started");
     puts("Current exception level : ");
     putint(get_current_el() >> 2);
     putc('\n');
@@ -91,5 +91,5 @@ bootstrap_main(void)
     VmInfos vm_data = setup_vm_bootstrap_data();
     mmu_init(&vm_data);
 
-    SUCCESS("<BOOTSTRAP> BOOTSTRAPING COMPLETE");
+    SUCCESS("<Bootstrap> Bootstraping complete");
 }

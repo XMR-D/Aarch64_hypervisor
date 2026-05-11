@@ -15,7 +15,8 @@ uint64_t curr_len = 0;
 //Current index
 uint8_t curr = 0;
 
-void ResetInput()
+void 
+ResetInput()
 {
     for (uint64_t i = 0; i < curr_len; i++) {
         input[i] = 0;
@@ -24,7 +25,8 @@ void ResetInput()
 }
 
 //CmdResolve: Resolve the cmd buffer checking format of arguments and setup Cli_arg struct
-uint64_t CmdHandler()
+uint64_t 
+CmdHandler()
 {
     //TODO: Here parse arguments if necessary
     if (strcmp(input, (uint8_t *) "help") == 0) {
@@ -58,7 +60,8 @@ uint64_t CmdHandler()
 
 //CLI: main function that print a CLI, read the input, tokenize the args
 //and parse the command passed
-void CLI(void)
+void 
+CLI(void)
 {
     uint8_t ch = 0;
     int curr = 0;

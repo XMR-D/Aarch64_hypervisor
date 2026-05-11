@@ -7,7 +7,8 @@
 //Memory
 
 //memcpy: copy n bytes from src to dest assuming memory does not overlap
-void * memcpy(void *dest, const void *src, size_t n)
+void * 
+memcpy(void *dest, const void *src, size_t n)
 {
     uint8_t * ds = (uint8_t *) dest;
     uint8_t * sr = (uint8_t *) src;
@@ -21,7 +22,8 @@ void * memcpy(void *dest, const void *src, size_t n)
 }
 
 //memcmp: compare n bytes of two memory area
-int64_t memcmp(const void *bl1, const void *bl2, size_t n)
+int64_t 
+memcmp(const void *bl1, const void *bl2, size_t n)
 {
     uint8_t * block1 = (uint8_t *) bl1;
     uint8_t * block2 = (uint8_t *) bl2;
@@ -37,9 +39,9 @@ int64_t memcmp(const void *bl1, const void *bl2, size_t n)
 }
 
 //Strings
-
 //strlen: length of a string
-uint64_t strlen(uint8_t *a)
+uint64_t 
+strlen(uint8_t *a)
 {
     uint64_t ret = 0;
     while(a[ret] != 0)
@@ -48,7 +50,8 @@ uint64_t strlen(uint8_t *a)
 }
 
 //strcmp: compare two strings
-int64_t strcmp(uint8_t *a, uint8_t *b)
+int64_t 
+strcmp(uint8_t *a, uint8_t *b)
 {
     uint64_t la = strlen(a);
     uint64_t lb = strlen(b);
@@ -66,25 +69,29 @@ int64_t strcmp(uint8_t *a, uint8_t *b)
 }
 
 //Check if a uint8_t is printable
-uint8_t is_printable(uint8_t c)
+uint8_t 
+is_printable(uint8_t c)
 {
     return (c >= 33 && c <= 126);
 }
 
 //Check if a uint8_t is (abcdef)
-uint8_t is_hexchar(uint8_t c)
+uint8_t 
+is_hexchar(uint8_t c)
 {
     return ((c >= 97 && c <= 102) || (c >= 65 && c <= 70) || (c >= 48 && c <= 57));
 }
 
 //Check if a uint8_t is alphabetic
-uint8_t is_alphabetic(uint8_t c)
+uint8_t 
+is_alphabetic(uint8_t c)
 {
     return ((c >= 97 && c <= 122) || (c >= 65 && c <= 90));
 }
 
 //translate c to lower case
-uint8_t to_lower(uint8_t c)
+uint8_t 
+to_lower(uint8_t c)
 {
     if (c >= 65 && c <= 90)
         return c + 32;
@@ -92,7 +99,8 @@ uint8_t to_lower(uint8_t c)
 }
 
 //Translate a character to it's decimal value, non valid char return negative value
-int8_t char_to_num(uint8_t c)
+int8_t 
+char_to_num(uint8_t c)
 {
     //not a digit (abcdef)
     if (c > 57)
@@ -123,7 +131,8 @@ int8_t char_to_num(uint8_t c)
 //0 str is an hex nb
 //1 str is not an hex nb
 //2 error while checking
-uint8_t is_hex(uint8_t * str, uint8_t size)
+uint8_t 
+is_hex(uint8_t * str, uint8_t size)
 {
     uint8_t * curs = str;
 
@@ -151,7 +160,8 @@ uint8_t is_hex(uint8_t * str, uint8_t size)
 //0 str is an dec nb
 //1 str is not an dec nb
 //2 error while checking
-uint8_t is_dec(uint8_t * str, uint8_t size)
+uint8_t 
+is_dec(uint8_t * str, uint8_t size)
 {
     uint8_t * curs = str;
 
@@ -176,7 +186,8 @@ uint8_t is_dec(uint8_t * str, uint8_t size)
 //Translate a given string representation of an integer in base base into an integer
 //result: value of the integer
 //-1: error found
-int64_t from_str(uint8_t * str, uint8_t size, int64_t base)
+int64_t 
+from_str(uint8_t * str, uint8_t size, int64_t base)
 {
 
     uint64_t result = 0;
@@ -218,7 +229,8 @@ int64_t from_str(uint8_t * str, uint8_t size, int64_t base)
 }
 
 //Math
-uint64_t pow(uint64_t a, uint64_t b)
+uint64_t 
+pow(uint64_t a, uint64_t b)
 {
     uint64_t count = 1;
 
@@ -230,7 +242,8 @@ uint64_t pow(uint64_t a, uint64_t b)
 }
 
 // Align to 'size' (must be power of 2)
-uint64_t align_on_size(uint64_t addr, uint64_t size) 
+uint64_t
+align_on_size(uint64_t addr, uint64_t size) 
 {
     uint64_t mask = size - 1;
     return (addr + mask) & ~mask;

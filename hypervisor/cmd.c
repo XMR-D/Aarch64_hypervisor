@@ -4,13 +4,15 @@
 #include "serial.h"
 #include "CLI.h"
 
-uint64_t Unknown(void)
+uint64_t 
+Unknown(void)
 {
     puts(" : Unknown command (type 'help' to see usable commands)\n");
     return 0;
 }
 
-uint64_t Help(void)
+uint64_t 
+Help(void)
 {
     puts("help\n");
     puts("       Display this help.\n");
@@ -36,46 +38,47 @@ uint64_t Help(void)
     return 0;
 }
 
-/*void Memdump(uint64_t s_off, uint64_t nb_byte, uint8_t gran)
-{
-
-}*/
-
-uint64_t Memdump(void)
+uint64_t
+Memdump(void)
 {
     puts("Memdump: To be done.\n");
     return 0;
 }
 //Check memory chunks to see if available or not
-uint64_t Memtest(void)
+uint64_t
+Memtest(void)
 {
     puts("Memtest: To be done.\n");
     return 0;
 }
 
 //Check memory chunks to see if available or not
-uint64_t Hostcheck(void)
+uint64_t
+Hostcheck(void)
 {
     puts("Hostcheck: To be done.\n");
     return 0;
 }
 
 //Get info from host kernel iso
-uint64_t Hostinfo(void)
+uint64_t
+Hostinfo(void)
 {
     puts("Hostinfo: To be done.\n");
     return 0;
 }
 
 //Get info from Guest kernel iso
-uint64_t Guestinfo(void)
+uint64_t
+Guestinfo(void)
 {
     puts("GuestInfo: To be done.\n");
     return 0;
 }
 
 //Start the booting sequence of the host kernel, once started, boot the the guest kernel.
-uint64_t Boot(void)
+uint64_t
+Boot(void)
 {
     puts("Boot: To be done.\n");
     return 0;

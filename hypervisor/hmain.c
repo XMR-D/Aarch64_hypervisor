@@ -6,7 +6,8 @@
 #include "picolibc.h"
 #include "CLI.h"
 
-int hmain()
+int 
+hmain()
 {
     INFO("Starting Hypervisor logic");
     while(1) {
